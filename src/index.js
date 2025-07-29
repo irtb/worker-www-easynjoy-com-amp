@@ -13,7 +13,7 @@ export default {
     }
 
     // 从 R2 获取文件
-    const object = await env.MY_BUCKET.get(key);
+    const object = await env.EASYNJOY.get(key);
     if (!object) {
       return new Response('文件未找到', { status: 404 });
     }
