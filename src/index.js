@@ -3,13 +3,21 @@ export default {
     const url = new URL(request.url);
     let key = url.pathname.slice(1); // 移除路径开头的斜杠
 
-    // 如果路径为空或以斜杠结尾，追加 index.html
+    // 处理根路径或以斜杠结尾的情况，追加 index.html
     if (key === '' || key.endsWith('/')) {
-      key += 'index.html';
+      key = 'index.html';
     }
-    // 如果路径不以斜杠结尾且可能为目录，尝试追加 /index.html
+    // 如果没有文件扩展名且不是以 / 结尾，追加 .html
     else if (!key.includes('.') && !isFileExtension(key)) {
-      key += '/index.html';
+      key += '.html';
+    }
+    // 如果已有扩展名，直接使用
+    else if (isFileExtension(key)) {
+      // 保持原样
+    }
+    // 其他情况保持原 key
+    else {
+      key += '.html'; // 默认追加 .html
     }
 
     // 从 R2 获取文件
@@ -20,8 +28,10 @@ export default {
 
     // 设置响应头
     const headers = new Headers();
-    headers.set('Content-Type', object.httpMetadata.contentType || 'application/octet-stream');
+    headers.set('Content-Type', object.httpMetadata.contentType || 'text/html');
     headers.set('Cache-Control', 'public, max-age=31536000');
+    headers.set('X-Content-Type-Options', 'nosniff');
+    headers.set('Link', `<https://www.easynjoy.com${url.pathname}>; rel="canonical"`); // 动态生成规范 URL
 
     return new Response(object.body, { headers });
   }
@@ -45,5 +55,3 @@ function isFileExtension(key) {
   ];
   return extensions.some(ext => key.toLowerCase().endsWith(ext));
 }
-
-
