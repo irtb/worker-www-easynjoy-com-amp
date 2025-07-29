@@ -6,12 +6,20 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "worker-www-easynjoy-com-amp",
 	"compatibility_date": "2025-07-26",
-	"assets": {
-		"directory": "./public"
-	},
+	"main": "src/index.js",
+	// "assets": {
+	// 	"directory": "./public"
+	// },
+	
 	"observability": {
 		"enabled": true
-	}
+	},
+	"r2_buckets": [
+		{
+			"binding": "EASYNJOY",
+			"bucket_name": "www-easynjoy-com-amp"
+		}
+	],
 	/**
 	 * Smart Placement
 	 * Docs: https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
